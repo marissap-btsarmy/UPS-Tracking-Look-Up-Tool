@@ -1,15 +1,15 @@
 import { getAdminClient } from '@/lib/supabase'
 
-// Flexible column detection — handles different WorldShip export configurations
+// Flexible column detection — handles WorldShip/WorldEase export and custom configurations
 const COL_MAP = {
-  tracking:   ['tracking number', 'trackingnumber', 'tracking_number', 'tracking#', 'tracking no', 'trackingno', '1z'],
-  shipdate:   ['ship date', 'shipdate', 'date shipped', 'dateshipped', 'ship_date'],
-  service:    ['service type', 'servicetype', 'service_type', 'service level', 'service', 'ups service'],
-  weight:     ['weight', 'billed weight', 'actual weight', 'pkg weight'],
+  tracking:   ['leadtrackingnumber', 'packagetrackingnumber', 'tracking number', 'trackingnumber', 'tracking_number', 'tracking#', 'tracking no', 'trackingno'],
+  shipdate:   ['collectiondate', 'shipmentprocesstimestamp', 'ship date', 'shipdate', 'date shipped', 'dateshipped', 'ship_date'],
+  service:    ['servicetype', 'service type', 'service_type', 'service level', 'service', 'ups service'],
+  weight:     ['actualweight', 'billableweight', 'weight', 'billed weight', 'actual weight', 'pkg weight'],
   zone:       ['zone', 'ups zone', 'shipping zone'],
-  negotiated: ['negotiated charge', 'negotiatedcharge', 'net charge', 'netchg', 'amount billed', 'billed charge', 'total charge'],
-  published:  ['published charge', 'publishedcharge', 'list rate', 'list price'],
-  recipient:  ['ship to name', 'recipient', 'recipient name', 'company', 'ship to company', 'consignee'],
+  negotiated: ['totalshipmentcharge_negotiated', 'negotiated charge', 'negotiatedcharge', 'net charge', 'netchg', 'amount billed', 'billed charge', 'total charge'],
+  published:  ['totalshipmentcharge_published', 'published charge', 'publishedcharge', 'list rate', 'list price'],
+  recipient:  ['shipto_company', 'shipto_attention', 'ship to name', 'recipient', 'recipient name', 'company', 'ship to company', 'consignee'],
 }
 
 function findCol(headers, key) {
@@ -42,6 +42,14 @@ function parseNum(val) {
   return isNaN(n) ? null : n
 }
 
+// WorldShip dates arrive as 20260601122235 (YYYYMMDDHHMMSS) — convert to YYYY-MM-DD
+function formatDate(val) {
+  if (!val) return val
+  const s = val.replace(/\D/g, '')
+  if (s.length >= 8) return `${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}`
+  return val
+}
+
 export async function POST(request) {
   const password = request.headers.get('x-admin-password')
   if (!password || password !== process.env.ADMIN_PASSWORD) {
@@ -71,7 +79,7 @@ export async function POST(request) {
     .filter(row => row.some(c => c))
     .map(row => ({
       tracking_number: get(row, 'tracking') || null,
-      ship_date:       get(row, 'shipdate') || null,
+      ship_date:       formatDate(get(row, 'shipdate')) || null,
       service_type:    get(row, 'service') || null,
       weight:          get(row, 'weight') || null,
       zone:            get(row, 'zone') || null,
