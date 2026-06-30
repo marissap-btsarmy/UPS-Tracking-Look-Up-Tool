@@ -123,7 +123,7 @@ export default function SearchPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
-                    {['Tracking #', 'Ship Date', 'Service', 'Weight', 'Zone', 'Actual Cost', 'Published Rate', 'Recipient'].map(h => (
+                    {['Tracking #', 'Ship Date', 'Service', 'Weight', 'Actual Cost', 'Published Rate', 'Recipient'].map(h => (
                       <th key={h} className="text-left px-4 py-3 font-semibold border-b border-gray-200 whitespace-nowrap">{h}</th>
                     ))}
                   </tr>
@@ -139,7 +139,6 @@ export default function SearchPage() {
                           : '—'}
                       </td>
                       <td className="px-4 py-3 text-gray-600">{row.weight || '—'}</td>
-                      <td className="px-4 py-3 text-gray-600">{row.zone || '—'}</td>
                       <td className="px-4 py-3 font-bold text-emerald-600 text-base whitespace-nowrap">{fmt(row.negotiated_charge)}</td>
                       <td className="px-4 py-3 text-gray-400 line-through whitespace-nowrap">{fmt(row.published_charge)}</td>
                       <td className="px-4 py-3 text-gray-600">{row.recipient_name || '—'}</td>

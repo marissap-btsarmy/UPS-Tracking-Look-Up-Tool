@@ -20,7 +20,6 @@ CREATE TABLE shipments (
   ship_date       TEXT,
   service_type    TEXT,
   weight          TEXT,
-  zone            TEXT,
   negotiated_charge DECIMAL(10,2),
   published_charge  DECIMAL(10,2),
   recipient_name  TEXT,
