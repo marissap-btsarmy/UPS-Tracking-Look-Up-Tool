@@ -31,48 +31,48 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1a3554 50%, #0f172a 100%)' }}>
-      <div className="w-full max-w-sm bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
+    <div className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--bg)' }}>
+      <div className="w-full max-w-sm card p-8">
 
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-9 h-9 rounded-xl bg-blue-500 flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-blue-500/30">
+          <div className="w-9 h-9 bg-surface-2 flex items-center justify-center text-white text-xs font-heading font-bold">
             UPS
           </div>
           <div>
-            <p className="text-white font-semibold leading-none">Shipping Cost Lookup</p>
-            <p className="text-blue-400 text-xs mt-0.5">Bells of Steel</p>
+            <p className="page-title text-text leading-none">Shipping Cost Lookup</p>
+            <p className="section-label mt-1">Bells of Steel</p>
           </div>
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-slate-300 mb-2">Email</label>
+          <label className="section-label block mb-2">Email</label>
           <input
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleLogin()}
             placeholder="you@bellsofsteel.com"
-            className="w-full bg-white/10 border border-white/20 text-white placeholder-slate-500 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:bg-white/15 transition-all"
+            className="field w-full h-12 px-4 text-sm"
             autoComplete="email"
             autoFocus
           />
         </div>
 
         <div className="mb-6">
-          <label className="block text-sm font-medium text-slate-300 mb-2">Password</label>
+          <label className="section-label block mb-2">Password</label>
           <input
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleLogin()}
             placeholder="Enter password"
-            className="w-full bg-white/10 border border-white/20 text-white placeholder-slate-500 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:bg-white/15 transition-all"
+            className="field w-full h-12 px-4 text-sm"
             autoComplete="current-password"
           />
         </div>
 
         {error && (
-          <div className="bg-red-500/15 border border-red-500/25 text-red-300 px-4 py-3 rounded-xl text-sm mb-4">
+          <div className="px-4 py-3 text-sm mb-4" style={{ background: 'rgba(187,58,46,0.08)', border: '1px solid var(--bad)', color: 'var(--bad)' }}>
             {error}
           </div>
         )}
@@ -80,12 +80,12 @@ export default function LoginPage() {
         <button
           onClick={handleLogin}
           disabled={loading}
-          className="w-full bg-blue-500 hover:bg-blue-400 active:bg-blue-600 disabled:opacity-50 text-white font-semibold py-3.5 rounded-xl transition-colors shadow-lg shadow-blue-500/20 text-sm"
+          className="btn btn-accent w-full h-12"
         >
-          {loading ? 'Signing in…' : 'Sign in'}
+          {loading ? 'Signing in…' : 'Log in'}
         </button>
 
-        <p className="text-xs text-slate-500 text-center mt-6">
+        <p className="section-label text-center mt-6 normal-case tracking-normal" style={{ fontSize: '11px' }}>
           Accounts are created by an admin in the Supabase dashboard — there&apos;s no self sign-up.
         </p>
       </div>

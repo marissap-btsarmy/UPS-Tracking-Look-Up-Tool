@@ -1,3 +1,146 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --surface-2: #0a0a0a;
+  --border: #e2e2df;
+  --text: #0a0a0a;
+  --text-2: #6b6b6b;
+  --accent: #ff4b29;
+  --accent-ink: #ffffff;
+  --ok: #2c8553;
+  --warn: #b45309;
+  --bad: #bb3a2e;
+  --subtle-fill: #f1f2f3;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141414;
+    --surface: #1e1e1e;
+    --border: #2e2e2e;
+    --text: #ececec;
+    --text-2: #a3a39e;
+    --accent: #ff5c3d;
+    --ok: #4ec27a;
+    --warn: #e0a458;
+    --bad: #e5695e;
+    --subtle-fill: #262626;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #141414;
+  --surface: #1e1e1e;
+  --border: #2e2e2e;
+  --text: #ececec;
+  --text-2: #a3a39e;
+  --accent: #ff5c3d;
+  --ok: #4ec27a;
+  --warn: #e0a458;
+  --bad: #e5695e;
+  --subtle-fill: #262626;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.page-title {
+  font: 800 24px Rubik, Inter, system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.section-label {
+  font: 700 11.5px "Space Mono", ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-2);
+}
+
+.display {
+  font: 400 clamp(36px, 6vw, 64px) Anton, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.02;
+}
+
+.btn {
+  font: 700 14px Rubik, Inter, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: background-color 150ms, color 150ms, border-color 150ms;
+}
+
+.btn-primary {
+  background: var(--surface-2);
+  color: #fff;
+  border: 1px solid var(--surface-2);
+}
+.btn-primary:hover { background: #1a1a1a; }
+.btn-primary:disabled { opacity: 0.5; }
+
+.btn-accent {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 1px solid var(--accent);
+}
+.btn-accent:hover { filter: brightness(1.08); }
+.btn-accent:disabled { opacity: 0.5; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-2);
+  border: 1px solid transparent;
+}
+.btn-ghost:hover { color: var(--text); background: var(--subtle-fill); }
+
+.field {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font: 400 15px Inter, sans-serif;
+}
+.field:focus {
+  outline: none;
+  border: 2px solid var(--text);
+}
+.field::placeholder { color: var(--text-2); }
+
+.card {
+  background: var(--surface);
+  border: 2px solid var(--text);
+}
+
+.mono {
+  font-family: "Space Mono", ui-monospace, monospace;
+}
+
+.bos-table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+.bos-table th {
+  background: var(--surface-2);
+  color: #fff;
+  font: 700 11px Inter, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: left;
+  white-space: nowrap;
+  padding: 10px 12px;
+}
+.bos-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+}
+.bos-table tbody tr:nth-child(2n) { background: rgba(10, 10, 10, 0.035); }
+.bos-table tbody tr:hover { background: rgba(255, 75, 41, 0.07); }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .bos-table tbody tr:nth-child(2n) { background: rgba(255, 255, 255, 0.03); }
+}
+:root[data-theme="dark"] .bos-table tbody tr:nth-child(2n) { background: rgba(255, 255, 255, 0.03); }
