@@ -12,11 +12,16 @@ export default function LoginPage() {
   const [error, setError]       = useState('')
 
   const handleLogin = async () => {
-    if (!email.trim() || !password) { setError('Enter your email and password.'); return }
+    const trimmedEmail = email.trim()
+    if (!trimmedEmail || !password) { setError('Enter your email and password.'); return }
+    if (!trimmedEmail.toLowerCase().endsWith('@bellsofsteel.com')) {
+      setError('Use your Bells of Steel email address.')
+      return
+    }
     setLoading(true); setError('')
     const supabase = createBrowserSupabaseClient()
     const { error } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
+      email: trimmedEmail,
       password,
     })
     setLoading(false)
