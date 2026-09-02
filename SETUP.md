@@ -41,7 +41,7 @@ CREATE POLICY "Public read" ON shipments FOR SELECT USING (true);
 
 ---
 
-## Step 2 — Create login accounts
+## Step 2 — Create login accounts (email + password)
 
 This app has no public sign-up — you create an account for each teammate who needs access:
 
@@ -49,6 +49,27 @@ This app has no public sign-up — you create an account for each teammate who n
 2. Enter their email and a temporary password, and tick **Auto Confirm User** (so they don't need to click an email link)
 3. Share the email/password with them — they can change the password later via **Authentication → Users** if needed
 4. Optional but recommended: go to **Authentication → Providers → Email** and turn **off** "Allow new users to sign up", since accounts should only be created by an admin
+
+---
+
+## Step 2b — Enable "Continue with Google" (optional)
+
+The login page also offers Google sign-in, so anyone with a `@bellsofsteel.com` Google account
+can sign in without you creating a password for them. This needs a one-time setup:
+
+1. **Google Cloud Console** ([console.cloud.google.com](https://console.cloud.google.com)):
+   - Create a project (or reuse one), then go to **APIs & Services → OAuth consent screen** and set it up (Internal if you're on Google Workspace, otherwise External)
+   - Go to **APIs & Services → Credentials → Create Credentials → OAuth client ID**, type **Web application**
+   - Under **Authorized redirect URIs**, add: `https://<your-project-ref>.supabase.co/auth/v1/callback` (find `<your-project-ref>` in your Supabase project URL)
+   - Copy the generated **Client ID** and **Client Secret**
+2. **Supabase dashboard**: go to **Authentication → Providers → Google**, toggle it on, and paste in the Client ID and Client Secret from step 1, then **Save**
+3. That's it — no new Vercel env vars needed, the app already calls `supabase.auth.signInWithOAuth({ provider: 'google' })`
+
+**Note on the domain restriction:** the app only lets `@bellsofsteel.com` addresses in — it checks
+the signed-in user's email after Google redirects back and signs them right back out if it doesn't
+match. If your Google Workspace is exclusively `bellsofsteel.com` accounts, you can additionally
+restrict at the OAuth consent screen level for tighter enforcement, but the app-side check covers
+personal Gmail accounts either way.
 
 ---
 
