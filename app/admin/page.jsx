@@ -37,21 +37,21 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1a3554 50%, #0f172a 100%)' }}>
+    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
 
       {/* Header */}
-      <header className="border-b border-white/10 px-6 py-4">
+      <header className="border-b-2 border-text px-6 py-4">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-blue-500 flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-blue-500/30">
+            <div className="w-9 h-9 bg-surface-2 flex items-center justify-center text-white text-xs font-heading font-bold">
               UPS
             </div>
             <div>
-              <p className="text-white font-semibold leading-none">Import Shipments</p>
-              <p className="text-blue-400 text-xs mt-0.5">Admin</p>
+              <p className="page-title text-text leading-none">Import Shipments</p>
+              <p className="section-label mt-1">Admin</p>
             </div>
           </div>
-          <a href="/" className="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all">
+          <a href="/" className="btn btn-ghost px-3 py-2">
             ← Back to search
           </a>
         </div>
@@ -59,30 +59,30 @@ export default function AdminPage() {
 
       <div className="max-w-2xl mx-auto px-6 py-14">
 
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
+        <div className="card p-8">
 
           {/* Password */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-slate-300 mb-2">Admin Password</label>
+            <label className="section-label block mb-2">Admin Password</label>
             <input
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleUpload()}
               placeholder="Enter password"
-              className="w-full bg-white/10 border border-white/20 text-white placeholder-slate-500 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:bg-white/15 transition-all"
+              className="field w-full h-12 px-4 text-sm"
             />
           </div>
 
           {/* File drop area */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-slate-300 mb-2">WorldShip CSV Export</label>
+            <label className="section-label block mb-2">WorldShip CSV Export</label>
             <div
-              className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all ${
-                file
-                  ? 'border-blue-400/50 bg-blue-500/10'
-                  : 'border-white/15 hover:border-white/30 hover:bg-white/5'
-              }`}
+              className="p-10 text-center cursor-pointer transition-colors"
+              style={{
+                border: `2px dashed ${file ? 'var(--accent)' : 'var(--border)'}`,
+                background: file ? 'rgba(255,75,41,0.06)' : 'transparent',
+              }}
               onClick={() => document.getElementById('csvInput').click()}
               onDragOver={e => e.preventDefault()}
               onDrop={e => {
@@ -93,15 +93,13 @@ export default function AdminPage() {
             >
               {file ? (
                 <>
-                  <div className="text-3xl mb-2">✅</div>
-                  <p className="font-medium text-blue-300 text-sm">{file.name}</p>
-                  <p className="text-xs text-slate-500 mt-1">Ready to import — click to change</p>
+                  <p className="mono text-sm text-text font-bold">{file.name}</p>
+                  <p className="section-label mt-2">Ready to import — click to change</p>
                 </>
               ) : (
                 <>
-                  <div className="text-3xl mb-2 opacity-30">📂</div>
-                  <p className="font-medium text-slate-300 text-sm">Click to choose a file, or drag and drop</p>
-                  <p className="text-xs text-slate-500 mt-1">WorldShip CSV export (.csv)</p>
+                  <p className="text-sm text-text">Click to choose a file, or drag and drop</p>
+                  <p className="section-label mt-2">WorldShip CSV export (.csv)</p>
                 </>
               )}
               <input
@@ -115,25 +113,25 @@ export default function AdminPage() {
           </div>
 
           {/* Note */}
-          <div className="bg-amber-500/10 border border-amber-500/20 text-amber-300/80 rounded-xl px-4 py-3 text-xs mb-6">
+          <div className="px-4 py-3 text-xs mb-6" style={{ background: 'rgba(180,83,9,0.08)', border: '1px solid var(--warn)', color: 'var(--warn)' }}>
             Uploading adds new shipments and updates existing ones. Records not in this file are kept.
           </div>
 
           {error && (
-            <div className="bg-red-500/15 border border-red-500/25 text-red-300 px-4 py-3 rounded-xl text-sm mb-4">
+            <div className="px-4 py-3 text-sm mb-4" style={{ background: 'rgba(187,58,46,0.08)', border: '1px solid var(--bad)', color: 'var(--bad)' }}>
               {error}
             </div>
           )}
           {success && (
-            <div className="bg-emerald-500/15 border border-emerald-500/25 text-emerald-300 px-4 py-3 rounded-xl text-sm mb-4 font-medium">
-              ✅ {success}
+            <div className="px-4 py-3 text-sm mb-4 font-bold" style={{ background: 'rgba(44,133,83,0.08)', border: '1px solid var(--ok)', color: 'var(--ok)' }}>
+              {success}
             </div>
           )}
 
           <button
             onClick={handleUpload}
             disabled={loading}
-            className="w-full bg-blue-500 hover:bg-blue-400 active:bg-blue-600 disabled:opacity-50 text-white font-semibold py-3.5 rounded-xl transition-colors shadow-lg shadow-blue-500/20 text-sm"
+            className="btn btn-accent w-full h-12"
           >
             {loading ? 'Importing…' : 'Import Shipments'}
           </button>

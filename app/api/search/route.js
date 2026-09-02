@@ -1,5 +1,15 @@
 import { supabase } from '@/lib/supabase'
 
+// Recipient names may be a person ("Jane Smith") or a company — mask
+// everything after the first word so a customer's last name never
+// reaches the browser.
+function maskLastName(name) {
+  if (!name) return name
+  const parts = name.trim().split(/\s+/)
+  if (parts.length <= 1) return name
+  return `${parts[0]} ***`
+}
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url)
   const q = searchParams.get('q')?.trim()
@@ -19,5 +29,7 @@ export async function GET(request) {
     return Response.json({ error: error.message }, { status: 500 })
   }
 
-  return Response.json({ results: data })
+  const results = data.map(row => ({ ...row, recipient_name: maskLastName(row.recipient_name) }))
+
+  return Response.json({ results })
 }
