@@ -1,8 +1,9 @@
 # WorldShip Cost Lookup — Setup Guide
 
 ## What this app does
-- **Search page** (`/`): Anyone on your team enters a tracking number and sees the shipment cost instantly
-- **Admin page** (`/admin`): Password-protected page where you upload a fresh WorldShip CSV to update the data
+- **Login page** (`/login`): Everything below requires signing in with a Supabase Auth account — there's no public access or self sign-up
+- **Search page** (`/`): Signed-in teammates enter a tracking number and see the shipment cost instantly
+- **Admin page** (`/admin`): Any signed-in user can upload a fresh WorldShip CSV to update the data
 
 ---
 
@@ -40,7 +41,18 @@ CREATE POLICY "Public read" ON shipments FOR SELECT USING (true);
 
 ---
 
-## Step 2 — Deploy to Vercel
+## Step 2 — Create login accounts
+
+This app has no public sign-up — you create an account for each teammate who needs access:
+
+1. In Supabase, go to **Authentication → Users → Add user**
+2. Enter their email and a temporary password, and tick **Auto Confirm User** (so they don't need to click an email link)
+3. Share the email/password with them — they can change the password later via **Authentication → Users** if needed
+4. Optional but recommended: go to **Authentication → Providers → Email** and turn **off** "Allow new users to sign up", since accounts should only be created by an admin
+
+---
+
+## Step 3 — Deploy to Vercel
 
 1. Go to [github.com](https://github.com) and create a free account (if you don't have one)
 2. Create a new repository called `worldship-lookup` and upload all these project files
@@ -53,21 +65,20 @@ CREATE POLICY "Public read" ON shipments FOR SELECT USING (true);
 | `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anon key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Your Supabase service role key |
-| `ADMIN_PASSWORD` | A password you choose for the /admin page |
 
 6. Click **Deploy** — Vercel gives you a URL like `https://worldship-lookup.vercel.app`
 
 ---
 
-## Step 3 — Load your first batch of data
+## Step 4 — Load your first batch of data
 
 1. Open WorldShip on your shipping computer
 2. Go to **Tools → Export/Import Data → Create/Edit Export File**
 3. Set Data Type to **Shipment History**, choose your date range
 4. Include: Tracking Number, Ship Date, Service Type, Weight, Zone, Published Charge, Negotiated Charge, Recipient Name
 5. Save as CSV
-6. Go to `https://your-app.vercel.app/admin`
-7. Enter your admin password, upload the CSV — done!
+6. Go to `https://your-app.vercel.app`, sign in, then go to `/admin`
+7. Upload the CSV — done!
 
 ---
 
@@ -82,5 +93,5 @@ Each day (or whenever you want fresh data):
 
 ## Sharing with your team
 
-Just send them the Vercel URL (e.g. `https://worldship-lookup.vercel.app`).
-No login needed to search — only the `/admin` page requires the password.
+Send them the Vercel URL (e.g. `https://worldship-lookup.vercel.app`) plus the login
+you created for them in Step 2. Everyone needs an account — there's no public access.

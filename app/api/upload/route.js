@@ -50,11 +50,8 @@ function formatDate(val) {
 }
 
 export async function POST(request) {
-  const password = request.headers.get('x-admin-password')
-  if (!password || password !== process.env.ADMIN_PASSWORD) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
+  // Auth is enforced by middleware.js — every /api/* request already
+  // requires a valid Supabase session by the time it reaches here.
   const formData = await request.formData()
   const file = formData.get('file')
   if (!file) return Response.json({ error: 'No file provided' }, { status: 400 })

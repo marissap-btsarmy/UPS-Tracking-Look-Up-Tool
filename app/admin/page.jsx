@@ -1,29 +1,36 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { createBrowserSupabaseClient } from '@/lib/supabase'
 
 export default function AdminPage() {
-  const [password, setPassword] = useState('')
+  const router = useRouter()
   const [file, setFile]         = useState(null)
   const [loading, setLoading]   = useState(false)
   const [success, setSuccess]   = useState('')
   const [error, setError]       = useState('')
 
+  const signOut = async () => {
+    const supabase = createBrowserSupabaseClient()
+    await supabase.auth.signOut()
+    router.push('/login')
+    router.refresh()
+  }
+
   const handleUpload = async () => {
-    if (!password) { setError('Enter the admin password first.'); return }
-    if (!file)     { setError('Select a CSV file to upload.'); return }
+    if (!file) { setError('Select a CSV file to upload.'); return }
     setLoading(true); setError(''); setSuccess('')
     const formData = new FormData()
     formData.append('file', file)
     try {
       const res  = await fetch('/api/upload', {
         method: 'POST',
-        headers: { 'x-admin-password': password },
         body: formData,
       })
       const data = await res.json()
       if (!res.ok) {
-        if (res.status === 401) throw new Error('Incorrect password.')
+        if (res.status === 401) throw new Error('Your session expired — sign in again.')
         throw new Error(data.error || 'Upload failed.')
       }
       setSuccess(`Imported ${data.imported.toLocaleString()} shipments successfully.`)
@@ -51,28 +58,20 @@ export default function AdminPage() {
               <p className="text-blue-400 text-xs mt-0.5">Admin</p>
             </div>
           </div>
-          <a href="/" className="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all">
-            ← Back to search
-          </a>
+          <div className="flex items-center gap-2">
+            <a href="/" className="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all">
+              ← Back to search
+            </a>
+            <button onClick={signOut} className="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all">
+              Sign out
+            </button>
+          </div>
         </div>
       </header>
 
       <div className="max-w-2xl mx-auto px-6 py-14">
 
         <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
-
-          {/* Password */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-slate-300 mb-2">Admin Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleUpload()}
-              placeholder="Enter password"
-              className="w-full bg-white/10 border border-white/20 text-white placeholder-slate-500 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-400 focus:bg-white/15 transition-all"
-            />
-          </div>
 
           {/* File drop area */}
           <div className="mb-6">

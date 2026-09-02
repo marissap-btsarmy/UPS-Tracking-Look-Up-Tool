@@ -1,12 +1,28 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { createBrowserSupabaseClient } from '@/lib/supabase'
 
 export default function SearchPage() {
+  const router = useRouter()
   const [query, setQuery]     = useState('')
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
+  const [userEmail, setUserEmail] = useState('')
+
+  useEffect(() => {
+    const supabase = createBrowserSupabaseClient()
+    supabase.auth.getUser().then(({ data }) => setUserEmail(data.user?.email || ''))
+  }, [])
+
+  const signOut = async () => {
+    const supabase = createBrowserSupabaseClient()
+    await supabase.auth.signOut()
+    router.push('/login')
+    router.refresh()
+  }
 
   const search = async () => {
     if (!query.trim()) return
@@ -49,9 +65,15 @@ export default function SearchPage() {
               <p className="text-blue-400 text-xs mt-0.5">Bells of Steel</p>
             </div>
           </div>
-          <a href="/admin" className="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all">
-            Admin →
-          </a>
+          <div className="flex items-center gap-4">
+            {userEmail && <span className="text-xs text-slate-500 hidden sm:inline">{userEmail}</span>}
+            <a href="/admin" className="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all">
+              Admin →
+            </a>
+            <button onClick={signOut} className="text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all">
+              Sign out
+            </button>
+          </div>
         </div>
       </header>
 
